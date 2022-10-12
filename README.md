@@ -1,7 +1,7 @@
 # botnet-attack-detection
-botnet attack detection using anomaly detection and classification
+# botnet attack detection using anomaly detection and classification
 
-#Import libraries
+# Import libraries
 
 import sklearn
 import numpy as np
@@ -19,7 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 
-#Load Dataset
+# Load Dataset
 
 names = np.array(["duration","protocol_type","service","flag","src_bytes",
     "dst_bytes","land","wrong_fragment","urgent","hot","num_failed_logins",
@@ -31,16 +31,109 @@ names = np.array(["duration","protocol_type","service","flag","src_bytes",
     "dst_host_same_srv_rate","dst_host_diff_srv_rate","dst_host_same_src_port_rate",
     "dst_host_srv_diff_host_rate","dst_host_serror_rate","dst_host_srv_serror_rate",
     "dst_host_rerror_rate","dst_host_srv_rerror_rate","labels","others"])
+
 TrainDataset = pd.read_csv('KDDTrain+.csv', names=names, header=None)
 TestDataset = pd.read_csv('KDDTest+.csv', names=names, header=None)
 
 TrainData = TrainDataset.iloc[:, :-1]
 TestData = TestDataset.iloc[:, :-1]
 
+# Data Analysis
 
+attributes_labels_train =  TrainData['labels'].replace({
+    'normal': 0,
+    
+    'back': 1,
+    'land': 1,
+    'neptune': 1,
+    'pod': 1,
+    'smurf': 1,
+    'teardrop': 1,
+    'mailbomb': 1,
+    'apache2': 1,
+    'processtable': 1,
+    'udpstorm': 1,
+    
+    'ipsweep': 2,
+    'nmap': 2,
+    'portsweep': 2,
+    'satan': 2,
+    'mscan': 2,
+    'saint': 2,
 
+    'ftp_write': 3,
+    'guess_passwd': 3,
+    'imap': 3,
+    'multihop': 3,
+    'phf': 3,
+    'spy': 3,
+    'warezclient': 3,
+    'warezmaster': 3,
+    'sendmail': 3,
+    'named': 3,
+    'snmpgetattack': 3,
+    'snmpguess': 3,
+    'xlock': 3,
+    'xsnoop': 3,
+    'worm': 3,
+    
+    'buffer_overflow': 4,
+    'loadmodule': 4,
+    'perl': 4,
+    'rootkit': 4,
+    'httptunnel': 4,
+    'ps': 4,    
+    'sqlattack': 4,
+    'xterm': 4
+})
+attributes_labels_test = TestData['labels'].replace({
+    'normal': 0,
+    
+    'back': 1,
+    'land': 1,
+    'neptune': 1,
+    'pod': 1,
+    'smurf': 1,
+    'teardrop': 1,
+    'mailbomb': 1,
+    'apache2': 1,
+    'processtable': 1,
+    'udpstorm': 1,
+    
+    'ipsweep': 2,
+    'nmap': 2,
+    'portsweep': 2,
+    'satan': 2,
+    'mscan': 2,
+    'saint': 2,
 
-
+    'ftp_write': 3,
+    'guess_passwd': 3,
+    'imap': 3,
+    'multihop': 3,
+    'phf': 3,
+    'spy': 3,
+    'warezclient': 3,
+    'warezmaster': 3,
+    'sendmail': 3,
+    'named': 3,
+    'snmpgetattack': 3,
+    'snmpguess': 3,
+    'xlock': 3,
+    'xsnoop': 3,
+    'worm': 3,
+    
+    'buffer_overflow': 4,
+    'loadmodule': 4,
+    'perl': 4,
+    'rootkit': 4,
+    'httptunnel': 4,
+    'ps': 4,    
+    'sqlattack': 4,
+    'xterm': 4
+})
+TrainData['labels'] = attributes_labels_train
+TestData['labels'] = attributes_labels_test
 
 
 
