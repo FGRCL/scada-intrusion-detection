@@ -135,7 +135,10 @@ attributes_labels_test = TestData['labels'].replace({
 TrainData['labels'] = attributes_labels_train
 TestData['labels'] = attributes_labels_test
 
+# Check Train and Test Data dimensionality
 
+TrainData.shape
+TestData.shape
 
 
 
