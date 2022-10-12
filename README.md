@@ -1,6 +1,7 @@
 # botnet-attack-detection
 # botnet attack detection using anomaly detection and classification
 
+
 # Import libraries
 
 import sklearn
@@ -18,6 +19,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+
 
 # Load Dataset
 
@@ -37,6 +39,7 @@ TestDataset = pd.read_csv('KDDTest+.csv', names=names, header=None)
 
 TrainData = TrainDataset.iloc[:, :-1]
 TestData = TestDataset.iloc[:, :-1]
+
 
 # Data Analysis
 
@@ -135,10 +138,12 @@ attributes_labels_test = TestData['labels'].replace({
 TrainData['labels'] = attributes_labels_train
 TestData['labels'] = attributes_labels_test
 
+
 # Check Train and Test Data dimensionality
 
 TrainData.shape
 TestData.shape
+
 
 # Data Cleaning
 
@@ -173,3 +178,19 @@ print('protocol_type', len(TestData['protocol_type'].value_counts().keys()))
 print('service', len(TestData['service'].value_counts().keys()))
 print('flag', len(TestData['flag'].value_counts().keys()))
 
+
+# Encoding Categorical features
+
+# Scaling
+
+# Class Balancing
+
+# Feature Selection
+
+# Models training and testing
+
+# Evaluation
+
+# Hyperparameter tuning
+
+# Prediction
