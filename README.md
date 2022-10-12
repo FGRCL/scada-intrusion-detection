@@ -140,5 +140,36 @@ TestData['labels'] = attributes_labels_test
 TrainData.shape
 TestData.shape
 
+# Data Cleaning
 
+categorical = [1, 2, 3]
+binary = [6, 11, 13, 14, 20, 21]
+numeric = list(set(range(41)).difference(categorical).difference(binary))
+
+categorical_columns = names[categorical].tolist()
+binary_columns = names[binary].tolist()
+numeric_columns = names[numeric].tolist()
+
+categorical_columns
+binary_columns
+numeric_columns
+
+TrainData[binary_columns].describe().transpose()
+TrainData.loc[TrainData['su_attempted'] == 2.0, 'su_attempted'] = 0.0
+TestData.loc[TestData['su_attempted'] == 2.0, 'su_attempted'] = 0.0
+
+TrainData[binary_columns].describe().transpose()
+TrainData[numeric_columns].describe().transpose()
+
+TrainData = TrainData.drop('num_outbound_cmds',axis=1)
+TestData = TestData.drop('num_outbound_cmds',axis=1)
+numeric_columns.remove('num_outbound_cmds')
+
+print('protocol_type', len(TrainData['protocol_type'].value_counts().keys()))
+print('service', len(TrainData['service'].value_counts().keys()))
+print('flag', len(TrainData['flag'].value_counts().keys()))
+
+print('protocol_type', len(TestData['protocol_type'].value_counts().keys()))
+print('service', len(TestData['service'].value_counts().keys()))
+print('flag', len(TestData['flag'].value_counts().keys()))
 
