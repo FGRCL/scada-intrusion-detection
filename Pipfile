@@ -9,6 +9,9 @@ numpy = "*"
 matplotlib = "*"
 pandas = "*"
 jupyter = "*"
+torch = "*"
+torchvision = "*"
+torchaudio = "*"
 
 [dev-packages]
 
