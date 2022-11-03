@@ -80,6 +80,44 @@ x_old = data.loc[ : , data.columns != 'result']
 y_old = data['result']
 
 
+# oversampling the train dataset using SMOTE
+# finds the the nearest neighbors for its target class and 
+# combines features of the target class with features of its 
+# neighbors instead of extrapolating the minority class
+
+# Set your x and y parameters to perform SMOTE
+
+# Separating features and labels for all dataset
+x_old = data.loc[ : , data.columns != 'result']
+y_old = data['result']
+
+# Separating features and labels for normal & each attack type:
+x_old_normal_entries = normal_entries.loc[ : , normal_entries.columns != 'result']
+y_old_normal_entries = normal_entries['result']
+
+x_old_NMRI_entries = NMRI_entries.loc[ : , NMRI_entries.columns != 'result']
+y_old_NMRI_entries = NMRI_entries['result']
+
+x_old_CMRI_entries = CMRI_entries.loc[ : , CMRI_entries.columns != 'result']
+y_old_CMRI_entries = CMRI_entries['result']
+
+x_old_MSCI_entries = MSCI_entries.loc[ : , MSCI_entries.columns != 'result']
+y_old_MSCI_entries = MSCI_entries['result']
+
+x_old_MPCI_entries = MPCI_entries.loc[ : , MPCI_entries.columns != 'result']
+y_old_MPCI_entries = MPCI_entries['result']
+
+x_old_MFCI_entries = MFCI_entries.loc[ : , MFCI_entries.columns != 'result']
+y_old_MFCI_entries = MFCI_entries['result']
+
+x_old_DoS_entries = DoS_entries.loc[ : , DoS_entries.columns != 'result']
+y_old_DoS_entries = DoS_entries['result']
+
+x_old_Recon_entries = Recon_entries.loc[ : , Recon_entries.columns != 'result']
+y_old_Recon_entries = Recon_entries['result']
+
+
+
 # Class Balancing
 # Class balancing using SMOTE technique
 !pip install imbalanced-learn
