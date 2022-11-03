@@ -210,7 +210,7 @@ ax = df.plot.bar(rot=0)
 
 plt.xlabel('Entry Category')
 plt.ylabel('No. of instances')
-plt.title('DATASET COMPARISON BEFORE AND AFTER BALANCING')
+plt.title('DATASET COMPARISON BEFORE AND AFTER BALANCING (Individual Attacks)')
 plt.legend()
 
 
