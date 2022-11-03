@@ -305,7 +305,7 @@ def feature_selection_ica(x,y):
     return selectedfeature_ica
 
 
-# Combine all the previous techniques and get the features that have been chosen by at least count feature selection technique
+# Combine all the previous techniques
 # Build estimator from PCA, CCA and ICA:
 FS_pca_old = feature_selection_pca(x_old_scaled,y_old)
 FS_cca_old = feature_selection_cca(x_old_scaled,y_old)
