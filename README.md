@@ -41,37 +41,37 @@ headerList = ['command_address', 'response_address', 'command_memory', 'response
 data.to_csv("Gaspipelinedatasetfull.csv", header=headerList, index=False)
 
 
-# Separate dataset into normal, abnormal attacks and each attack type
+# Separate imbalanced dataset into normal, abnormal attacks and each attack type
 
-normal_entries = data.loc[data['result'] == 0]
-print("Normal entries: " + str(len(normal_entries)))
+old_normal_entries = data.loc[data['result'] == 0]
+print("Old Normal entries: " + str(old_normal_entries.shape))
 
-attacks_entries = data.loc[(data['result'] == 1) | (data['result'] == 2) 
+old_attacks_entries = data.loc[(data['result'] == 1) | (data['result'] == 2) 
                            | (data['result'] == 3) | (data['result'] == 4)
                            | (data['result'] == 5) | (data['result'] == 6)
                            | (data['result'] == 7)]
-print("attacks entries: " + str(len(attacks_entries)))
+print("Old attacks entries: " + str(old_attacks_entries.shape))
 
-NMRI_entries = data.loc[data['result'] == 1]
-print("NMRI attacks entries: " + str(len(NMRI_entries)))
+old_NMRI_entries = data.loc[data['result'] == 1]
+print("Old NMRI attacks entries: " + str(old_NMRI_entries.shape))
 
-CMRI_entries = data.loc[data['result'] == 2]
-print("CMRI attacks entries: " + str(len(CMRI_entries)))
+old_CMRI_entries = data.loc[data['result'] == 2]
+print("Old CMRI attacks entries: " + str(old_CMRI_entries.shape))
 
-MSCI_entries = data.loc[data['result'] == 3]
-print("MSCI attacks entries: " + str(len(MSCI_entries)))
+old_MSCI_entries = data.loc[data['result'] == 3]
+print("Old MSCI attacks entries: " + str(old_MSCI_entries.shape))
 
-MPCI_entries = data.loc[data['result'] == 4]
-print("MPCI attacks entries: " + str(len(MPCI_entries)))
+old_MPCI_entries = data.loc[data['result'] == 4]
+print("Old MPCI attacks entries: " + str(old_MPCI_entries.shape))
 
-MFCI_entries = data.loc[data['result'] == 5]
-print("MFCI attacks entries: " + str(len(MFCI_entries)))
+old_MFCI_entries = data.loc[data['result'] == 5]
+print("Old MFCI attacks entries: " + str(old_MFCI_entries.shape))
 
-DoS_entries = data.loc[data['result'] == 6]
-print("DoS attacks entries: " + str(len(DoS_entries)))
+old_DoS_entries = data.loc[data['result'] == 6]
+print("Old DoS attacks entries: " + str(old_DoS_entries.shape))
 
-Recon_entries = data.loc[data['result'] == 7]
-print("Recon attacks entries: " + str(len(Recon_entries)))
+old_Recon_entries = data.loc[data['result'] == 7]
+print("Old Recon attacks entries: " + str(old_Recon_entries.shape))
 
 
 # Separating features and labels
@@ -125,10 +125,81 @@ y_old_Recon_entries = Recon_entries['result']
 # Apply SMOTE technique
 smote = SMOTE()
 x_sm, y_sm = smote.fit_sample(x_old, y_old)
+# plot_2d_space(x_sm, y_sm, 'SMOTE over-sampling')
 x_balanced = x_sm
 y_balanced = y_sm
 
+# create a new dataframe for balanced features & labels
+data_balanced = pd.DataFrame(x_balanced)
+data_balanced['result'] = y_balanced.values.tolist()
+
+# old data dimensions
+print(data.shape)
+print(x_old.shape)
+print(y_old.shape)
+
+# balanced data dimensions
+print(data_balanced.shape)
+print(x_balanced.shape)
+print(y_balanced.shape)
+
+
+# Separate balanced dataset into normal, abnormal attacks and each attack type
+balanced_normal_entries = data_balanced.loc[data_balanced['result'] == 0]
+print("Balanced Normal entries: " + str(balanced_normal_entries.shape))
+
+balanced_attacks_entries = data_balanced.loc[(data_balanced['result'] == 1) | (data_balanced['result'] == 2) 
+                           | (data_balanced['result'] == 3) | (data_balanced['result'] == 4)
+                           | (data_balanced['result'] == 5) | (data_balanced['result'] == 6)
+                           | (data_balanced['result'] == 7)]
+print("Balanced attacks entries: " + str(balanced_attacks_entries.shape))
+
+balanced_NMRI_entries = data_balanced.loc[data_balanced['result'] == 1]
+print("Balanced NMRI attacks entries: " + str(balanced_NMRI_entries.shape))
+
+balanced_CMRI_entries = data_balanced.loc[data_balanced['result'] == 2]
+print("Balanced CMRI attacks entries: " + str(balanced_CMRI_entries.shape))
+
+balanced_MSCI_entries = data_balanced.loc[data_balanced['result'] == 3]
+print("Balanced MSCI attacks entries: " + str(balanced_MSCI_entries.shape))
+
+balanced_MPCI_entries = data_balanced.loc[data_balanced['result'] == 4]
+print("Balanced MPCI attacks entries: " + str(balanced_MPCI_entries.shape))
+
+balanced_MFCI_entries = data_balanced.loc[data_balanced['result'] == 5]
+print("Balanced MFCI attacks entries: " + str(balanced_MFCI_entries.shape))
+
+balanced_DoS_entries = data_balanced.loc[data_balanced['result'] == 6]
+print("Balanced DoS attacks entries: " + str(balanced_DoS_entries.shape))
+
+balanced_Recon_entries = data_balanced.loc[data_balanced['result'] == 7]
+print("Balanced Recon attacks entries: " + str(balanced_Recon_entries.shape))
+
+# display(normal_entries)
+# display(NMRI_entries)
+
+
+
 # Plot data before and after balancing
+# Plot a histogram to check the class imbalance
+# Plot normal vs aggregation of attacks
+list_y_old_agg = len(old_attacks_entries)
+list_y_balanced_agg = len(balanced_attacks_entries)
+
+index = ['normal', 'attacks'] 
+    
+df = pd.DataFrame({'Before Balancing': list_y_old_agg,
+                   'After Balancing': list_y_balanced_agg}, index=index)
+ax = df.plot.bar(rot=0)
+
+plt.xlabel('Entry Category')
+plt.ylabel('No. of instances')
+plt.title('DATASET COMPARISON BEFORE AND AFTER BALANCING (Attacks Aggregation)')
+plt.legend()
+
+
+# Plot a histogram to check the class imbalance
+# Plot normal vs each attack type
 list_y_old = pd.value_counts(y_old).to_numpy().tolist()
 list_y_balanced = pd.value_counts(y_balanced).to_numpy().tolist()
 index = ['normal', 'CMRI', 'MPCI', 'Recon', 'NMRI', 'DoS', 'MSCI', 'MFCI'] 
@@ -141,8 +212,6 @@ plt.xlabel('Entry Category')
 plt.ylabel('No. of instances')
 plt.title('DATASET COMPARISON BEFORE AND AFTER BALANCING')
 plt.legend()
-
-df
 
 
 # Cleaning dataset
