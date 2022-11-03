@@ -91,30 +91,38 @@ y_old = data['result']
 x_old = data.loc[ : , data.columns != 'result']
 y_old = data['result']
 
+
 # Separating features and labels for normal & each attack type:
-x_old_normal_entries = normal_entries.loc[ : , normal_entries.columns != 'result']
-y_old_normal_entries = normal_entries['result']
+x_old_normal_entries = old_normal_entries.loc[ : , old_normal_entries.columns != 'result']
+y_old_normal_entries = old_normal_entries['result']
 
-x_old_NMRI_entries = NMRI_entries.loc[ : , NMRI_entries.columns != 'result']
-y_old_NMRI_entries = NMRI_entries['result']
 
-x_old_CMRI_entries = CMRI_entries.loc[ : , CMRI_entries.columns != 'result']
-y_old_CMRI_entries = CMRI_entries['result']
+x_old_NMRI_entries = old_NMRI_entries.loc[ : , old_NMRI_entries.columns != 'result']
+y_old_NMRI_entries = old_NMRI_entries['result']
 
-x_old_MSCI_entries = MSCI_entries.loc[ : , MSCI_entries.columns != 'result']
-y_old_MSCI_entries = MSCI_entries['result']
 
-x_old_MPCI_entries = MPCI_entries.loc[ : , MPCI_entries.columns != 'result']
-y_old_MPCI_entries = MPCI_entries['result']
+x_old_CMRI_entries = old_CMRI_entries.loc[ : , old_CMRI_entries.columns != 'result']
+y_old_CMRI_entries = old_CMRI_entries['result']
 
-x_old_MFCI_entries = MFCI_entries.loc[ : , MFCI_entries.columns != 'result']
-y_old_MFCI_entries = MFCI_entries['result']
 
-x_old_DoS_entries = DoS_entries.loc[ : , DoS_entries.columns != 'result']
-y_old_DoS_entries = DoS_entries['result']
+x_old_MSCI_entries = old_MSCI_entries.loc[ : , old_MSCI_entries.columns != 'result']
+y_old_MSCI_entries = old_MSCI_entries['result']
 
-x_old_Recon_entries = Recon_entries.loc[ : , Recon_entries.columns != 'result']
-y_old_Recon_entries = Recon_entries['result']
+
+x_old_MPCI_entries = old_MPCI_entries.loc[ : , old_MPCI_entries.columns != 'result']
+y_old_MPCI_entries = old_MPCI_entries['result']
+
+
+x_old_MFCI_entries = old_MFCI_entries.loc[ : , old_MFCI_entries.columns != 'result']
+y_old_MFCI_entries = old_MFCI_entries['result']
+
+
+x_old_DoS_entries = old_DoS_entries.loc[ : , old_DoS_entries.columns != 'result']
+y_old_DoS_entries = old_DoS_entries['result']
+
+
+x_old_Recon_entries = old_Recon_entries.loc[ : , old_Recon_entries.columns != 'result']
+y_old_Recon_entries = old_Recon_entries['result']
 
 
 
@@ -125,7 +133,6 @@ y_old_Recon_entries = Recon_entries['result']
 # Apply SMOTE technique
 smote = SMOTE()
 x_sm, y_sm = smote.fit_sample(x_old, y_old)
-# plot_2d_space(x_sm, y_sm, 'SMOTE over-sampling')
 x_balanced = x_sm
 y_balanced = y_sm
 
@@ -152,7 +159,7 @@ balanced_attacks_entries = data_balanced.loc[(data_balanced['result'] == 1) | (d
                            | (data_balanced['result'] == 3) | (data_balanced['result'] == 4)
                            | (data_balanced['result'] == 5) | (data_balanced['result'] == 6)
                            | (data_balanced['result'] == 7)]
-print("Balanced attacks entries: " + str(balanced_attacks_entries.shape))
+print("Balanced attacks aggregation entries: " + str(balanced_attacks_entries.shape))
 
 balanced_NMRI_entries = data_balanced.loc[data_balanced['result'] == 1]
 print("Balanced NMRI attacks entries: " + str(balanced_NMRI_entries.shape))
@@ -174,9 +181,6 @@ print("Balanced DoS attacks entries: " + str(balanced_DoS_entries.shape))
 
 balanced_Recon_entries = data_balanced.loc[data_balanced['result'] == 7]
 print("Balanced Recon attacks entries: " + str(balanced_Recon_entries.shape))
-
-# display(normal_entries)
-# display(NMRI_entries)
 
 
 
