@@ -126,7 +126,7 @@ x_balanced.isnull().sum().sum()
 x_old_std = StandardScaler().fit_transform(x_old)
 x_balanced_std = StandardScaler().fit_transform(x_balanced)
 
-# feature scaling
+# Feature scaling
 stndS = StandardScaler()
 x_old_scaled = stndS.fit_transform(x_old_std)
 x_balanced_scaled = stndS.fit_transform(x_balanced_std)
@@ -263,36 +263,6 @@ y_balanced_FS = df_balanced.loc[:,['label']].values
 # split data into training and test sets
 x_balanced_FS_train, x_balanced_FS_test, y_balanced_FS_train, y_balanced_FS_test = train_test_split(
     x_balanced_FS, y_balanced_FS, test_size = 0.2, random_state=0)
-
-
-
-# Split data into normal & attacks sets
-# for imbalanced data
-# get normal+attacks entries from imbalanced data
-df_old_all = df_old.loc[(df_old['label'] == 0) | (df_old['label'] > 0)]
-df_old_all.to_csv('HMLIDS_old_all.csv', index=False)
-
-# get normal entries from imbalanced data with label "0" into a ataframe "df_old_normal"
-df_old_normal = df_old.loc[(df_old['label'] == 0)]
-df_old_normal.to_csv('HMLIDS_old_normal.csv', index=False)
-
-# get attack entries with label "1 to 7" into a dataframe "df_old_attacks"
-df_old_attacks = df_old.loc[(df_old['label'] > 0)]
-df_old_attacks.to_csv('HMLIDS_old_attacks.csv', index=False)
-
-
-# for balanced data
-# get normal+attacks entries from balanced data
-df_balanced_all = df_balanced.loc[(df_balanced['label'] == 0) | (df_balanced['label'] > 0)]
-df_balanced_all.to_csv('HMLIDS_balanced_all.csv', index=False)
-
-# get normal entries from balanced data with label "0" into a dataframe "df_balanced_normal"
-df_balanced_normal = df_balanced.loc[(df_balanced['label'] == 0)]
-df_balanced_normal.to_csv('HMLIDS_balanced_normal.csv', index=False)
-
-# get attack entries with label "1 to 7" into a dataframe "df_balanced_attacks"
-df_balanced_attacks = df_balanced.loc[(df_balanced['label'] > 0)]
-df_balanced_attacks.to_csv('HMLIDS_balanced_attacks.csv', index=False)
 
 
 
