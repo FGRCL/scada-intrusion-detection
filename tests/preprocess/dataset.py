@@ -3,7 +3,7 @@ import unittest
 from numpy import array, concatenate, count_nonzero, linspace, mean, ones, zeros
 from sklearn.preprocessing import StandardScaler
 
-from src.preprocess.dataset import balance_dataset, remove_missing_values, scale_features
+from src.preprocess.dataset import balance_dataset, convert_binary_labels, remove_missing_values, scale_features
 
 
 class PreprocessDatasetTest(unittest.TestCase):
@@ -46,6 +46,27 @@ class PreprocessDatasetTest(unittest.TestCase):
             self.assertAlmostEqual(0, m, 5)
         self.assertTrue(isinstance(scaler, StandardScaler))
 
+    def test_convert_binary_labels(self):
+        labels = array([
+            0,
+            1,
+            2,
+            7,
+            0,
+            9
+        ])
+        result = convert_binary_labels(labels)
+
+        expected_labels = array([
+            0,
+            1,
+            1,
+            1,
+            0,
+            1
+        ])
+        self.assertIsNotNone(result)
+        self.assertTrue(all(expected_labels == result))
 
 if __name__ == '__main__':
     unittest.main()
