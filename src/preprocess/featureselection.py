@@ -23,6 +23,3 @@ def ica(x, seed=12):
     x_ica = ICA.fit_transform(x)
 
     return x_ica
-
-def get_max_features(pca_features, cca_features, ica_features):
-    pass
