@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
+from pickle import dump
 
 from src import config
+from src.config import model_out_file_path
 from src.data.gaspipeline import load_gaspipeline_dataset
 from src.models.randomforest import RandomForest
 
@@ -12,19 +14,16 @@ def main():
 
     args = argument_parser.parse_args()
     config.verbosity = int(args.verbosity)
-
-    dataset = load_gaspipeline_dataset()
     models = []
     if args.randomforest:
-        model = RandomForest(dataset)
+        model = RandomForest()
         model.train()
-        models.append(model)
+        models.append(('randomforest', model))
 
-    metrics = []
-    for model in models:
-        metrics.append(model.get_metrics())
-
-    print(metrics)
+    for name, model in models:
+        with open(model_out_file_path / f'{name}.pkl', 'wb') as f:
+            dump(model, f)
+        print(model.get_metrics())
 
 if __name__ == "__main__":
     main()
