@@ -1,3 +1,5 @@
+from os import cpu_count
+
 from numpy import concatenate, linspace, logspace
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
@@ -35,7 +37,7 @@ class RandomForest(GaspipelineClassificationModel):
         self.model.fit(self.x_train, self.y_train)
 
     def tune(self):
-        self.model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity)
+        self.model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count()*2)
         self.model.fit(self.x_train, self.y_train)
 
         return self.model.cv_results_

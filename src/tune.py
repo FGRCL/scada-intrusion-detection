@@ -14,7 +14,8 @@ def main():
     argument_parser.add_argument("--randomforest", action='store_true')
 
     args = argument_parser.parse_args()
-    config.verbosity = int(args.verbosity)
+    if args.verbosity is not None:
+        config.verbosity = int(args.verbosity)
     metrics = []
     if args.randomforest:
         model = RandomForest()
