@@ -4,7 +4,7 @@ from pickle import dump
 from src import config
 from src.config import model_out_file_path
 from src.data.gaspipeline import load_gaspipeline_dataset
-from src.models.randomforest import RandomForest
+from src.models.randomforest import RandomForestClassification
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
         config.verbosity = int(args.verbosity)
     models = []
     if args.randomforest:
-        model = RandomForest()
+        model = RandomForestClassification()
         model.train()
         models.append(('randomforest', model))
 

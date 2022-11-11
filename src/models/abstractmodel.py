@@ -6,7 +6,7 @@ from src.config import f_score_beta
 from src.data.gaspipeline import load_gaspipeline_dataset
 
 
-class GaspipelineClassificationModel(ABC):
+class GaspipelineModelTrainer(ABC):
     def __init__(self):
         x_train, x_test, y_train, y_test = load_gaspipeline_dataset()
         x_train, x_test, y_train, y_test = self._preprocess_features(x_train, x_test, y_train, y_test)

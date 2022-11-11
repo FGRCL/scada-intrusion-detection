@@ -5,7 +5,7 @@ from pandas import DataFrame
 
 from src import config
 from src.config import tuning_out_file_path
-from src.models.randomforest import RandomForest
+from src.models.randomforest import RandomForestClassification
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
         config.verbosity = int(args.verbosity)
     metrics = []
     if args.randomforest:
-        model = RandomForest()
+        model = RandomForestClassification()
         results = model.tune()
         metrics.append(('randomforest', results))
 

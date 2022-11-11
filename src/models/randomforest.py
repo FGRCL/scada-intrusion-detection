@@ -6,12 +6,12 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.utils.fixes import loguniform
 
 from src import config
-from src.models.abstractmodel import GaspipelineClassificationModel
+from src.models.abstractmodel import GaspipelineModelTrainer
 from src.preprocess.dataset import convert_binary_labels, remove_missing_values, scale_features
 from src.preprocess.featureselection import get_first_cca_feature, get_first_ica_feature, get_first_pca_feature
 
 
-class RandomForest(GaspipelineClassificationModel):
+class RandomForestClassification(GaspipelineModelTrainer):
     best_parameters = {
         'n_estimators': logspace(1, 4, 3, dtype=int),
         'criterion': ['gini', 'entropy', 'log_loss'],
@@ -31,13 +31,13 @@ class RandomForest(GaspipelineClassificationModel):
 
     def __init__(self):
         super().__init__()
-        self.model = RandomForestClassifier(verbose=config.verbosity)
+        self.model = RandomForestClassifier(verbose=config.verbosity, n_jobs=cpu_count())
 
     def train(self):
         self.model.fit(self.x_train, self.y_train)
 
     def tune(self):
-        self.model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count()*2)
+        self.model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count())
         self.model.fit(self.x_train, self.y_train)
 
         return self.model.cv_results_
