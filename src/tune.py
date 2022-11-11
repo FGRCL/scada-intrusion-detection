@@ -3,15 +3,18 @@ from json import dump
 
 from pandas import DataFrame
 
+from src import config
 from src.config import tuning_out_file_path
 from src.models.randomforest import RandomForest
 
 
 def main():
     argument_parser = ArgumentParser()
+    argument_parser.add_argument("--verbosity", "-v")
     argument_parser.add_argument("--randomforest", action='store_true')
 
     args = argument_parser.parse_args()
+    config.verbosity = int(args.verbosity)
     metrics = []
     if args.randomforest:
         model = RandomForest()

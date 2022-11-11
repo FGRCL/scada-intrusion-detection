@@ -17,7 +17,7 @@ class RandomForest(GaspipelineClassificationModel):
     }
 
     tuning_parameters = {
-            'n_estimators': logspace(1, 4, 1, dtype=int),
+            'n_estimators': logspace(1, 4, 5, dtype=int),
             'criterion': ['gini', 'entropy', 'log_loss'],
             'min_samples_split': linspace(1, 10, 5),
             #'min_samples_leaf': linspace(1, 10, 5),
