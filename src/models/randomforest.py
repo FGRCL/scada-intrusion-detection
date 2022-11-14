@@ -13,25 +13,26 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class RandomForestClassification(GaspipelineModelTrainer):
     best_parameters = {
-        'n_estimators': logspace(1, 4, 3, dtype=int),
-        'criterion': ['gini', 'entropy', 'log_loss'],
-        'min_samples_split': linspace(1, 10, 5),
+        'n_estimators': 500,
+        'criterion': 'gini',
+        'min_samples_split': 8000,
+        'class_weight': 'balanced_subsample'
     }
 
     tuning_parameters = {
-            'n_estimators': logspace(1, 4, 5, dtype=int),
-            'criterion': ['gini', 'entropy', 'log_loss'],
-            'min_samples_split': linspace(2, 50, 5, dtype=int),
-            #'min_samples_leaf': linspace(1, 10, 5),
-            #'max_features': ['sqrt', 'log2', None],
-            #'min_impurity_decrease': logspace(0, -5, 5),
-            #'class_weight': ['balanced', 'balanced_subsample'],
-            #'ccp_alpha': logspace(0, -5, 5),
+            'n_estimators': [500],
+            'criterion': ['gini'],
+            'min_samples_split': [8000],
+            'min_samples_leaf': linspace(1, 10, 5),
+            'max_features': ['sqrt', 'log2', None],
+            'min_impurity_decrease': logspace(0, -5, 5),
+            'class_weight': ['balanced', 'balanced_subsample'],
+            'ccp_alpha': logspace(0, -5, 5),
         }
 
     def __init__(self):
         super().__init__()
-        self.model = RandomForestClassifier(verbose=config.verbosity, n_jobs=cpu_count())
+        self.model = RandomForestClassifier(verbose=config.verbosity, n_jobs=cpu_count(), **self.best_parameters)
 
     def train(self):
         self.model.fit(self.x_train, self.y_train)
