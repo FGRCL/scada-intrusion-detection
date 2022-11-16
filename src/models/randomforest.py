@@ -20,19 +20,19 @@ class RandomForestClassification(GaspipelineModelTrainer):
     }
 
     tuning_parameters = {
-            'n_estimators': [500],
-            'criterion': ['gini'],
-            'min_samples_split': [8000],
-            'min_samples_leaf': linspace(1, 10, 5),
-            'max_features': ['sqrt', 'log2', None],
-            'min_impurity_decrease': logspace(0, -5, 5),
-            'class_weight': ['balanced', 'balanced_subsample'],
-            'ccp_alpha': logspace(0, -5, 5),
-        }
+        'n_estimators': [500],
+        'criterion': ['gini'],
+        'min_samples_split': [8000],
+        'min_samples_leaf': linspace(1, 10, 5),
+        'max_features': ['sqrt', 'log2', None],
+        'min_impurity_decrease': logspace(0, -5, 5),
+        'class_weight': ['balanced', 'balanced_subsample'],
+        'ccp_alpha': logspace(0, -5, 5),
+    }
 
     def __init__(self):
         super().__init__()
-        self.model = RandomForestClassifier(verbose=config.verbosity, n_jobs=cpu_count(), **self.best_parameters)
+        self.model = RandomForestClassifier(verbose=config.verbosity, n_jobs=cpu_count())
 
     def train(self):
         self.model.fit(self.x_train, self.y_train)
