@@ -4,6 +4,7 @@ from pickle import dump
 from src import config
 from src.config import model_out_file_path
 from src.data.gaspipeline import load_gaspipeline_dataset
+from src.models.kmeans import KMeansTrainer
 from src.models.randomforest import RandomForestClassification
 
 
@@ -11,6 +12,7 @@ def main():
     argument_parser = ArgumentParser()
     argument_parser.add_argument("--verbosity", "-v")
     argument_parser.add_argument("--randomforest", action='store_true')
+    argument_parser.add_argument("--kmeans", action='store_true')
 
     args = argument_parser.parse_args()
     if args.verbosity is not None:
@@ -20,6 +22,10 @@ def main():
         model = RandomForestClassification()
         model.train()
         models.append(('randomforest', model))
+    if args.kmeans:
+        model = KMeansTrainer()
+        model.train()
+        models.append(('kmeans', model))
 
     for name, model in models:
         with open(model_out_file_path / f'{name}.pkl', 'wb') as f:
