@@ -12,6 +12,7 @@ jupyter = "*"
 torch = "*"
 torchvision = "*"
 torchaudio = "*"
+imbalanced-learn = "*"
 
 [dev-packages]
 

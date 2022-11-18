@@ -24,7 +24,7 @@ pipenv install
 
 ### Getting the data
 
-1. Get the dataset from [kaggle.com](https://www.kaggle.com/datasets/mkashifn/nbaiot-dataset) ask one of the contributors for a copy of the dataset
+1. Get the dataset from [ece.uah.edu](http://www.ece.uah.edu/~thm0009/icsdatasets/gas_final.arff) or ask one of the contributors for a copy of the dataset
 2. Add the datasets file to a folder called `data` at the root of the directory.
 
-   ![img.png](img.png)
+![img.png](img.png)
