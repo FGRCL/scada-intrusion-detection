@@ -1,10 +1,34 @@
 # botnet-attack-detection
 botnet attack detection using anomaly detection and classification
 
+## Using the scripts
+
+### training a models
+start the script `src/train.py` for training and `src/tune.py` for tuning. 
+
+#### model arguments
+pass the model name as argument to train it. We currently support the following models
+```shell
+--randomforest
+```
+
+#### other arguements
+```shell
+-v #verbosity of the output
+```
+
+#### example
+```shell
+python -m src.train --randomforest -v 4
+```
+
 ## Setting up your environments
 
+### Output
+the outputs of the script will be saved in the `out` folder at the root of the project
+
 ### Requirements
-You'll need the following software installed to setup your environment.
+You'll need the following software installed to set up your environment.
 - [python 3.10](https://www.python.org/)
 - [pipenv](https://pipenv.pypa.io/en/latest/)
 
