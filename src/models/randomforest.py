@@ -38,10 +38,10 @@ class RandomForestClassification(GaspipelineModelTrainer):
         self.model.fit(self.x_train, self.y_train)
 
     def tune(self):
-        self.model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count())
-        self.model.fit(self.x_train, self.y_train)
+        tuned_model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count())
+        tuned_model.fit(self.x_train, self.y_train)
 
-        return self.model.cv_results_
+        return tuned_model.cv_results_
 
     def get_model(self):
         return self.model
