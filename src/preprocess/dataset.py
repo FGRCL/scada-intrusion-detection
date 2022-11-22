@@ -1,6 +1,6 @@
 import numpy as np
 from imblearn.over_sampling import SMOTE
-from numpy import isnan, all
+from numpy import isnan, all, nonzero
 from sklearn.preprocessing import StandardScaler
 
 
@@ -20,3 +20,9 @@ def scale_features(features):
     scaler.fit(features)
     features_scaled = scaler.transform(features)
     return features_scaled, scaler
+
+
+def convert_binary_labels(labels):
+    malignant_labels = nonzero(labels)[0]
+    labels[malignant_labels] = 1
+    return labels

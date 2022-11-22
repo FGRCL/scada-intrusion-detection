@@ -1,4 +1,4 @@
-from numpy import genfromtxt, loadtxt
+from numpy import loadtxt
 from sklearn.model_selection import train_test_split
 
 from src.config import data_file_path
