@@ -133,4 +133,5 @@ dmypy.json
 /data
 
 #intellij
+/.DS_Store
 .idea/
