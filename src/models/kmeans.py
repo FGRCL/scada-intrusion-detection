@@ -4,7 +4,7 @@ from numpy import concatenate, linspace, logspace, percentile, zeros
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.cluster import KMeans
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, fbeta_score
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, KFold
 
 from src import config
 from src.config import f_score_beta
@@ -21,7 +21,7 @@ class KMeansTrainer(GaspipelineModelTrainer):
 
     tuning_parameters = {
         'anomaly_percentile': logspace(-6, 2, 9),
-        'n_clusters': linspace(5, 10, 3, dtype=int),
+        'n_clusters': linspace(1, 10, 5, dtype=int),
         'algorithm': ['elkan']
         # 'init': ['k-means++', 'random'],
         # 'n_init': logspace(1, 3, 10, dtype=int),
@@ -35,7 +35,7 @@ class KMeansTrainer(GaspipelineModelTrainer):
         self.model.fit(self.x_train)
 
     def tune(self):
-        tuned_model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count()*2)
+        tuned_model = GridSearchCV(self.model, self.tuning_parameters, cv=KFold(), verbose=config.verbosity, n_jobs=cpu_count()*2)
         tuned_model.fit(self.x_train, self.y_train)
 
         return tuned_model.cv_results_
