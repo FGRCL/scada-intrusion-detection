@@ -1,4 +1,5 @@
-from AdaBoost_classifier import * 
+from AdaBoost_classifier import *
+
 
 def SCADA_IDS_system(data_csv):
     # initialization
@@ -29,23 +30,37 @@ def SCADA_IDS_system(data_csv):
     print("- df_FS shape: ", df_FS.shape)
 
     # extracting normal/attacks instances
+    print("... Normal/Attacks extraction ...")
     FS_normal, FS_NMRI, FS_CMRI, FS_MSCI, FS_MPCI, FS_MFCI, FS_DoS, FS_Recon, FS_agg_attacks = \
         extracting_normal_attacks(df_FS)
 
     # balancing attacks to each other
+    print("... Balancing attacks ...")
     x_FS_agg_attacks_balanced, y_FS_agg_attacks_balanced = balancing_attacks(FS_agg_attacks)
 
     # balancing attacks to normal
+    print("... Balancing normal & attacks ...")
     x_FS_normal_agg_attacks_balanced, y_FS_normal_agg_attacks_balanced = balancing_all(FS_normal,
                                                                                        x_FS_agg_attacks_balanced,
                                                                                        y_FS_agg_attacks_balanced)
     # binary conversion of labels
-    x_FS_balanced_binary, y_FS_balanced_binary = binary_conversion(x_FS_normal_agg_attacks_balanced, y_FS_normal_agg_attacks_balanced, extracted_features_names)
+    print("... Binary conversion ...")
+    x_FS_balanced_binary, y_FS_balanced_binary = binary_conversion(x_FS_normal_agg_attacks_balanced,
+                                                                   y_FS_normal_agg_attacks_balanced,
+                                                                   extracted_features_names)
 
-    # 80% train & 20% test data split 
-    x_train_balanced, x_test_balanced, y_train_balanced, y_test_balanced = train_test_data(x_FS_balanced_binary, y_FS_balanced_binary)
-    
+    # 80% train & 20% test data split
+    print("... Train/Test Data ...")
+    x_train_balanced, x_test_balanced, y_train_balanced, y_test_balanced = train_test_data(x_FS_balanced_binary,
+                                                                                           y_FS_balanced_binary)
+
+    print("x_train_balanced: ", len(x_train_balanced))
+    print("y_train_balanced: ", len(y_train_balanced))
+    print("x_test_balanced: ", len(x_test_balanced))
+    print("y_test_balanced: ", len(y_test_balanced))
+
     # KNN classifier & evaluation
+    print("... KNN classification ...")
     report_KNN, cm_display_KNN = KNN_classifier(x_train_balanced, y_train_balanced, x_test_balanced, y_test_balanced)
     print("KNN classification report")
     print(report_KNN)
@@ -57,7 +72,9 @@ def SCADA_IDS_system(data_csv):
     plt.savefig(r"results\KNN Confusion Matrix.png")
 
     # AdaBoost classifier & evaluation
-    report_AdaBoost, cm_display_AdaBoost = AdaBoost_classifier(x_train_balanced, y_train_balanced, x_test_balanced, y_test_balanced)
+    print("... AdaBoost classification ...")
+    report_AdaBoost, cm_display_AdaBoost = AdaBoost_classifier(x_train_balanced, y_train_balanced, x_test_balanced,
+                                                               y_test_balanced)
     print("AdaBoost classification report")
     print(report_AdaBoost)
     print("\n")
@@ -66,7 +83,6 @@ def SCADA_IDS_system(data_csv):
     cm_display_AdaBoost.plot()
     plt.tight_layout()
     plt.savefig(r"results\AdaBoost Confusion Matrix.png")
-
 
     return
 
