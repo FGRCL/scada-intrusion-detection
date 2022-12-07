@@ -14,12 +14,14 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class PcaTrainer(GaspipelineModelTrainer):
     best_parameters = {
-        'anomaly_percentile': 10,
+        'anomaly_percentile': 1e-10,
+        'n_components': 19,
+        'whiten': False
     }
 
     tuning_parameters = {
-        'anomaly_percentile': logspace(-6, 2, 9),
-        'n_components': linspace(1, 26, 11, dtype=int),
+        'anomaly_percentile': logspace(-20, 1, 22),
+        'n_components': linspace(5, 30, 15, dtype=int),
         'whiten': [True, False],
     }
 
@@ -31,7 +33,7 @@ class PcaTrainer(GaspipelineModelTrainer):
         self.model.fit(self.x_train)
 
     def tune(self):
-        tuned_model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count() * 2)
+        tuned_model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, cv=10, n_jobs=cpu_count() * 2)
         tuned_model.fit(self.x_train, self.y_train)
 
         return tuned_model.cv_results_
@@ -42,15 +44,6 @@ class PcaTrainer(GaspipelineModelTrainer):
     def _preprocess_features(self, x_train, x_test, y_train, y_test):
         x_train, y_train = remove_missing_values(x_train, y_train)
         x_test, y_test = remove_missing_values(x_test, y_test)
-
-        # x_train_pca, pca = get_first_pca_feature(x_train)
-        # x_train_cca, cca = get_first_cca_feature(x_train, y_train)
-        # x_train_ica, ica = get_first_ica_feature(x_train)
-        # x_test_pca = pca.transform(x_test)
-        # x_test_cca = cca.transform(x_test)
-        # x_test_ica = ica.transform(x_test)
-        # x_train = concatenate((x_train_pca, x_train_cca, x_train_ica), axis=1)
-        # x_test = concatenate((x_test_pca, x_test_cca, x_test_ica), axis=1)
 
         x_train, scaler = scale_features(x_train)
         x_test = scaler.transform(x_test)
