@@ -8,6 +8,7 @@ from src.models.gmm import GmmTrainer
 from src.models.kmeans import KMeansTrainer
 from src.models.pca import PcaTrainer
 from src.models.randomforest import RandomForestClassification
+from src.models.svm import SvmTrainer
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
     argument_parser.add_argument("--kmeans", action='store_true')
     argument_parser.add_argument("--pca", action='store_true')
     argument_parser.add_argument("--gmm", action='store_true')
+    argument_parser.add_argument("--svm", action='store_true')
 
     args = argument_parser.parse_args()
     if args.verbosity is not None:
@@ -38,6 +40,10 @@ def main():
         model = GmmTrainer()
         model.train()
         models.append(('gmm', model))
+    if args.svm:
+        model = SvmTrainer()
+        model.train()
+        models.append(('svm', model))
 
     for name, model in models:
         with open(model_out_file_path / f'{name}.pkl', 'wb') as f:
