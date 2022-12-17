@@ -17,11 +17,10 @@ def SCADA_IDS_system(data_csv):
 
     # dimension reduction
     print("... Features Reduction ...")
-    p1, p2, p3 = dimensionality_reduction(x_scaled, y)
+    p1, p2 = dimensionality_reduction(x_scaled, y)
     p1_df = pd.DataFrame(p1, columns=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
-    p2_df = pd.DataFrame(p2, columns=['1'])
-    p3_df = pd.DataFrame(p3, columns=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'])
-    feature_selection_count_df, extracted_features_names = get_fs_features(df, p1_df, p2_df, p3_df, 1)
+    p2_df = pd.DataFrame(p2, columns=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'])
+    feature_selection_count_df, extracted_features_names = get_fs_features(df, p1_df, p2_df, 1)
 
     # create a dataframe with extracted features & label
     df_FS = df_scaled[extracted_features_names]
