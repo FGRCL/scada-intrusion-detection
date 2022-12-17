@@ -1,5 +1,6 @@
 from standardization import *
 
+
 # PCA components determination
 # principal components explain a part of the variance. From the Scikit-learn implementation, we can get the information
 # about the explained variance and plot the cumulative variance.
@@ -68,51 +69,29 @@ def CCA_features(x, y):
     return p2
 
 
-# ICA dimension reduction
-def ICA_features(x):
-    ICA = FastICA(n_components=11)
-    x_ica = ICA.fit_transform(x)
-    p3 = x_ica
-
-    return p3
-
-
 # dimensionality reduction
 def dimensionality_reduction(x_scaled, y):
-    #     for L in range(1, n + 1, 1):
-    #         for Q in range(1, k + 1, 1):
-    #             p1 = PCA(YL)
-    #             p2 = CCA(YL)
-    #             p3 = ICA(YL)
     PCA_cum_variance(x_scaled)
     p1 = PCA_features(x_scaled)
     CCA_features_correlation(x_scaled)
     p2 = CCA_features(x_scaled, y)
-    p3 = ICA_features(x_scaled)
 
-    return p1, p2, p3
+    return p1, p2
 
 
-# Combine all the previous techniques and get the features that have been
-# chosen by at least by one technique
-def get_fs_features(df, p1_df, p2_df, p3_df, count):
+# Get the features that have been selected by at least by one technique
+def get_fs_features(df, p1_df, p2_df, count):
     # Get combined features
     pd.set_option('display.max_rows', None)
     df = df.loc[:, df.columns != "result"]
     feature_name = list(df.columns)
     pca_index = int(list(p1_df.columns)[-1])
     cca_index = int(list(p2_df.columns)[-1])
-    ica_index = int(list(p3_df.columns)[-1])
-    # features_combination = (list(p1_df.columns) + list(p2_df.columns) + list(p3_df.columns))
-    # features_combination_index = list(dict.fromkeys(features_combination))
-    # features_maximum_component = a[-1]
     feature_selection_df = pd.DataFrame({'Feature': feature_name})
     pca_extracted_features = []
     cca_extracted_features = []
-    ica_extracted_features = []
     feature_selection_df["PCA"] = ""
     feature_selection_df["CCA"] = ""
-    feature_selection_df["ICA"] = ""
     feature_selection_df["Total"] = ""
     for i in range(0, pca_index):
         pca_extracted_features.append(feature_selection_df['Feature'].iloc[i])
@@ -124,12 +103,7 @@ def get_fs_features(df, p1_df, p2_df, p3_df, count):
         feature_selection_df.loc[j, 'CCA'] = "True"
         feature_selection_df['CCA'] = feature_selection_df['CCA'].replace('', 'False')
 
-    for z in range(0, ica_index):
-        ica_extracted_features.append(feature_selection_df['Feature'].iloc[z])
-        feature_selection_df.loc[z, 'ICA'] = "True"
-        feature_selection_df['ICA'] = feature_selection_df['ICA'].replace('', 'False')
-
-    # Count the frequency of each feature being selected by PCA, CCA & ICA
+    # Count the frequency of each feature being selected by PCA & CCA
     feature_selection_df['Total'] = feature_selection_df.apply(lambda x: x.str.contains("True").sum(), axis=1)
     feature_selection_df = feature_selection_df.sort_values(['Total', 'Feature'], ascending=False, ignore_index=True)
     dataframe_image.export(feature_selection_df, r"results\Extracted Features Occurrences.png")
