@@ -6,6 +6,7 @@ from pandas import DataFrame
 from src import config
 from src.config import tuning_out_file_path
 from src.models.gmm import GmmTrainer
+from src.models.kernelpcatrainer import KernelPcaTrainer
 from src.models.kmeans import KMeansTrainer
 from src.models.pca import PcaTrainer
 from src.models.randomforest import RandomForestClassification
@@ -20,6 +21,7 @@ def main():
     argument_parser.add_argument("--pca", action='store_true')
     argument_parser.add_argument("--gmm", action='store_true')
     argument_parser.add_argument("--svm", action='store_true')
+    argument_parser.add_argument("--kpca", action='store_true')
 
     args = argument_parser.parse_args()
     if args.verbosity is not None:
@@ -45,6 +47,10 @@ def main():
         model = SvmTrainer()
         results = model.tune()
         metrics.append(('svm', results))
+    if args.kpca:
+        model = KernelPcaTrainer()
+        results = model.tune()
+        metrics.append(('kpca', results))
 
     for metric in metrics:
         name, results = metric
