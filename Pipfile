@@ -13,6 +13,7 @@ torch = "*"
 torchvision = "*"
 torchaudio = "*"
 imbalanced-learn = "*"
+typing-extensions = "*"
 
 [dev-packages]
 
