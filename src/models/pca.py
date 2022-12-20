@@ -45,13 +45,14 @@ class PcaTrainer(GaspipelineModelTrainer):
 
 
 class PcaAnomalyDetection(BaseEstimator, ClassifierMixin):
-    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, **kwargs):
+    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, n_components=1, **kwargs):
         self._threshold = None
         self.anomaly_percentile = anomaly_percentile
         self.balance_dataset = balance_dataset
         self.feature_reduction = feature_reduction
         self.scale_features = scale_features
-        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features)
+        self.n_components = n_components
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.n_components)
         self.pca = PCA(**kwargs)
 
     def fit(self, X, y=None):
