@@ -26,11 +26,11 @@ class RandomForestClassification(GaspipelineModelTrainer):
         'n_estimators': [5, 10],
         'criterion': ['gini'],
         'min_samples_split': [8000],
-        # 'min_samples_leaf': linspace(1, 10, 5, dtype=int),
-        # 'max_features': ['sqrt', 'log2', None],
-        # 'min_impurity_decrease': logspace(0, -5, 5),
-        # 'class_weight': ['balanced', 'balanced_subsample'],
-        # 'ccp_alpha': logspace(0, -5, 5),
+        'min_samples_leaf': linspace(1, 10, 5, dtype=int),
+        'max_features': ['sqrt', 'log2', None],
+        'min_impurity_decrease': logspace(0, -5, 5),
+        'class_weight': ['balanced', 'balanced_subsample'],
+        'ccp_alpha': logspace(0, -5, 5),
     }
 
     def __init__(self):
