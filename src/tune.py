@@ -8,6 +8,7 @@ from src.config import tuning_out_file_path
 from src.models.adaboost import AdaBoostTrainer
 from src.models.gmm import GmmTrainer
 from src.models.kmeans import KMeansTrainer
+from src.models.knn import KnnTrainer
 from src.models.pca import PcaTrainer
 from src.models.randomforest import RandomForestClassification
 from src.models.svm import SvmTrainer
@@ -20,7 +21,8 @@ def main():
         ('pca', PcaTrainer),
         ('gmm', GmmTrainer),
         ('svm', SvmTrainer),
-        ('adaboost', AdaBoostTrainer)
+        ('adaboost', AdaBoostTrainer),
+        ('knn', KnnTrainer)
     ]
 
     argument_parser = ArgumentParser()
