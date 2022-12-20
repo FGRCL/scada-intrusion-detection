@@ -51,17 +51,6 @@ class SvmTrainer(GaspipelineModelTrainer):
     def get_model(self):
         return self.model
 
-    def _preprocess_features(self, x_train, x_test, y_train, y_test):
-        simple_imputer = SimpleImputer()
-        binary_label_encoder = BinaryLabelEncoder()
-
-        x_train = simple_imputer.fit_transform(x_train, y_train)
-        x_test = simple_imputer.fit_transform(x_test, y_test)
-
-        y_train = binary_label_encoder.transform(y_train)
-        y_test = binary_label_encoder.transform(y_test)
-        return x_train, x_test, y_train, y_test
-
 
 class GasPipelineSvc(BaseEstimator, ClassifierMixin):
     def __init__(self, balance_dataset=False, feature_reduction=False, scale_features=False, **kwargs):
@@ -82,7 +71,6 @@ class GasPipelineSvc(BaseEstimator, ClassifierMixin):
         return self.svc.predict(X)
 
     def score(self, X, y, sample_weight=None):
-        X = self.feature_extraction.transform(X)
         return self.svc.score(X, y, sample_weight)
 
     def set_params(self, **params):

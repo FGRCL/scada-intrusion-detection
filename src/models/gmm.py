@@ -1,5 +1,6 @@
 from os import cpu_count
 
+from imblearn.over_sampling import SMOTE
 from numpy import concatenate, linspace, logspace, percentile, zeros
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.metrics import f1_score
@@ -9,6 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from src import config
 from src.models.abstractmodel import GaspipelineModelTrainer
 from src.preprocess.dataset import convert_binary_labels, remove_missing_values, scale_features
+from src.preprocess.featureextraction import GasPipelineFeatureExtraction
 from src.preprocess.featureselection import get_first_cca_feature, get_first_ica_feature, get_first_pca_feature
 
 
@@ -43,39 +45,27 @@ class GmmTrainer(GaspipelineModelTrainer):
     def get_model(self):
         return self.model
 
-    def _preprocess_features(self, x_train, x_test, y_train, y_test):
-        x_train, y_train = remove_missing_values(x_train, y_train)
-        x_test, y_test = remove_missing_values(x_test, y_test)
-
-        x_train_pca, pca = get_first_pca_feature(x_train)
-        x_train_cca, cca = get_first_cca_feature(x_train, y_train)
-        x_train_ica, ica = get_first_ica_feature(x_train)
-        x_test_pca = pca.transform(x_test)
-        x_test_cca = cca.transform(x_test)
-        x_test_ica = ica.transform(x_test)
-        x_train = concatenate((x_train_pca, x_train_cca, x_train_ica), axis=1)
-        x_test = concatenate((x_test_pca, x_test_cca, x_test_ica), axis=1)
-
-        x_train, scaler = scale_features(x_train)
-        x_test = scaler.transform(x_test)
-
-        y_train = convert_binary_labels(y_train)
-        y_test = convert_binary_labels(y_test)
-        return x_train, x_test, y_train, y_test
-
 
 class GmmClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, anomaly_percentile=5, **kwargs):
+    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, **kwargs):
         self._threshold = None
         self.anomaly_percentile = anomaly_percentile
+        self.balance_dataset = balance_dataset
+        self.feature_reduction = feature_reduction
+        self.scale_features = scale_features
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features)
         self.gmm = GaussianMixture(**kwargs)
 
     def fit(self, X, y=None):
+        if self.balance_dataset:
+            X, y = SMOTE().fit_resample(X, y)
+        X = self.feature_extraction.fit_transform(X, y)
         self.gmm.fit(X)
         scores = self.gmm.score_samples(X)
         self._threshold = percentile(scores, self.anomaly_percentile)
 
     def predict(self, X):
+        X = self.feature_extraction.transform(X)
         scores = self.gmm.score_samples(X)
         y_pred = zeros(scores.size)
         y_pred[scores > self._threshold] = 1
@@ -87,6 +77,5 @@ class GmmClassifier(BaseEstimator, ClassifierMixin):
         return f1_score(y, y_pred)
 
     def set_params(self, **params):
-        self.anomaly_percentile = params.pop('anomaly_percentile', 5)
-        self.gmm.set_params(**params)
+        self.__init__(**params)
         return self

@@ -28,7 +28,7 @@ class GasPipelineFeatureExtraction(BaseEstimator, TransformerMixin):
 
         self.pipeline = Pipeline(steps=transforms)
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         self.pipeline.fit(X, y)
         return self
 
