@@ -16,15 +16,22 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class PcaTrainer(GaspipelineModelTrainer):
     best_parameters = {
-        'anomaly_percentile': 1e-10,
+        'anomaly_percentile': 1e-9,
         'n_components': 19,
-        'whiten': False
+        'whiten': False,
+        'balance_dataset': False,
+        'feature_reduction': False,
+        'scale_features': True,
     }
 
     tuning_parameters = {
-        'anomaly_percentile': logspace(-20, 1, 22),
-        'n_components': linspace(5, 30, 15, dtype=int),
-        'whiten': [True, False],
+        'anomaly_percentile': logspace(-10, 2, 13),
+        'n_components': [19],
+        'whiten': [False],
+        'balance_dataset': [False],
+        'feature_reduction': [True, False],
+        'scale_features': [True, False],
+        'feature_n_components': linspace(1, 12, 5, dtype=int),
     }
 
     def __init__(self):
@@ -45,19 +52,20 @@ class PcaTrainer(GaspipelineModelTrainer):
 
 
 class PcaAnomalyDetection(BaseEstimator, ClassifierMixin):
-    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, n_components=1, **kwargs):
+    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, feature_n_components=1, **kwargs):
         self._threshold = None
         self.anomaly_percentile = anomaly_percentile
         self.balance_dataset = balance_dataset
         self.feature_reduction = feature_reduction
         self.scale_features = scale_features
-        self.n_components = n_components
-        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.n_components)
+        self.feature_n_components = feature_n_components
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.feature_n_components)
         self.pca = PCA(**kwargs)
 
     def fit(self, X, y=None):
         if self.balance_dataset:
             X, y = SMOTE().fit_resample(X, y)
+        X = self.feature_extraction.fit_transform(X, y)
         x_pca = self.pca.fit_transform(X)
         x_reconstructed = self.pca.inverse_transform(x_pca)
         mse = square(x_reconstructed - X).mean(axis=-1)

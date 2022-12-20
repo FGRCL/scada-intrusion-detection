@@ -18,15 +18,18 @@ class GmmTrainer(GaspipelineModelTrainer):
     best_parameters = {
         'anomaly_percentile': 1e-4,
         'n_components': 1,
+        'balance_dataset': False,
+        'feature_reduction': False,
+        'scale_features': False,
     }
 
     tuning_parameters = {
-        'anomaly_percentile': [1e-4],
+        'anomaly_percentile': logspace(-10, 2, 13),
         'n_components': [1],
-        # 'covariance_type': ['full', 'tied', 'diag', 'spherical'],
-        # 'init_params': ['kmeans', 'k-means++', 'random', 'random_from_data'],
-        # 'tol': logspace(-6, -1, 6),
-        # 'warm_start': [False]
+        'balance_dataset': [False],
+        'feature_reduction': [True, False],
+        'scale_features': [True, False],
+        'feature_n_components': linspace(1, 12, 5, dtype=int),
     }
 
     def __init__(self):
@@ -47,14 +50,14 @@ class GmmTrainer(GaspipelineModelTrainer):
 
 
 class GmmClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, n_components=1, **kwargs):
+    def __init__(self, anomaly_percentile=5, balance_dataset=False, feature_reduction=False, scale_features=False, feature_n_components=1, **kwargs):
         self._threshold = None
         self.anomaly_percentile = anomaly_percentile
         self.balance_dataset = balance_dataset
         self.feature_reduction = feature_reduction
         self.scale_features = scale_features
-        self.n_components = n_components
-        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.n_components)
+        self.feature_n_components = feature_n_components
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.feature_n_components)
         self.gmm = GaussianMixture(**kwargs)
 
     def fit(self, X, y=None):

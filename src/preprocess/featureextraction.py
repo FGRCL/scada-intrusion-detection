@@ -17,7 +17,7 @@ class GasPipelineFeatureExtraction(BaseEstimator, TransformerMixin):
                 ('feature_reduction', FeatureUnion([
                     ('pca', PCA(n_components=n_components)),
                     ('cca', CCAWrapper(n_components=1)),
-                    ('ica', FastICA(n_components=n_components))
+                    ('ica', FastICA(n_components=n_components, whiten='unit-variance'))
                 ]))
             )
 
