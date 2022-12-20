@@ -19,18 +19,21 @@ class RandomForestClassification(GaspipelineModelTrainer):
         'n_estimators': 500,
         'criterion': 'gini',
         'min_samples_split': 8000,
-        'class_weight': 'balanced_subsample'
+        'class_weight': 'balanced_subsample',
+        'balance_dataset': True,
+        'feature_reduction': False,
+        'scale_features': False,
     }
 
     tuning_parameters = {
-        'n_estimators': [5, 10],
+        'n_estimators': [500],
         'criterion': ['gini'],
         'min_samples_split': [8000],
-        'min_samples_leaf': linspace(1, 10, 5, dtype=int),
-        'max_features': ['sqrt', 'log2', None],
-        'min_impurity_decrease': logspace(0, -5, 5),
-        'class_weight': ['balanced', 'balanced_subsample'],
-        'ccp_alpha': logspace(0, -5, 5),
+        'class_weight': ['balanced_subsample'],
+        'balance_dataset': [True, False],
+        'feature_reduction': [True, False],
+        'scale_features': [True, False],
+        'feature_n_components': linspace(1, 12, 5, dtype=int),
     }
 
     def __init__(self):
@@ -51,12 +54,12 @@ class RandomForestClassification(GaspipelineModelTrainer):
 
 
 class GasPipelineRandomForest(BaseEstimator, ClassifierMixin):
-    def __init__(self, balance_dataset=False, feature_reduction=False, scale_features=False, n_components=1, **kwargs):
+    def __init__(self, balance_dataset=False, feature_reduction=False, scale_features=False, feature_n_components=1, **kwargs):
         self.balance_dataset = balance_dataset
         self.feature_reduction = feature_reduction
         self.scale_features = scale_features
-        self.n_components = n_components
-        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.n_components)
+        self.feature_n_components = feature_n_components
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.feature_n_components)
         self.random_forest = RandomForestClassifier(**kwargs)
 
     def fit(self, X, y):
@@ -70,6 +73,7 @@ class GasPipelineRandomForest(BaseEstimator, ClassifierMixin):
         return self.random_forest.predict(X)
 
     def score(self, X, y, sample_weight=None):
+        X = self.feature_extraction.transform(X)
         return self.random_forest.score(X, y, sample_weight)
 
     def set_params(self, **params):

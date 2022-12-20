@@ -23,7 +23,10 @@ class SvmTrainer(GaspipelineModelTrainer):
         'scale_features': True,
         'kernel': 'rbf',
         'cache_size': 4000,
-        'shrinking': False
+        'shrinking': False,
+        'balance_dataset': True,
+        'feature_reduction': False,
+        'scale_features': True,
     }
 
     tuning_parameters = {
@@ -31,8 +34,12 @@ class SvmTrainer(GaspipelineModelTrainer):
         'feature_reduction': [False],
         'scale_features': [True],
         'kernel': ['rbf'],
-        'cache_size': [1000, 2000, 4000, 8000],
-        'shrinking': [True, False]
+        'cache_size': [4000],
+        'shrinking': [False],
+        'balance_dataset': [True, False],
+        'feature_reduction': [True, False],
+        'scale_features': [True, False],
+        'feature_n_components': linspace(1, 12, 5, dtype=int),
     }
 
     def __init__(self):
@@ -53,12 +60,12 @@ class SvmTrainer(GaspipelineModelTrainer):
 
 
 class GasPipelineSvc(BaseEstimator, ClassifierMixin):
-    def __init__(self, balance_dataset=False, feature_reduction=False, scale_features=False, n_components=1, **kwargs):
+    def __init__(self, balance_dataset=False, feature_reduction=False, scale_features=False, feature_n_components=1, **kwargs):
         self.balance_dataset = balance_dataset
         self.feature_reduction = feature_reduction
         self.scale_features = scale_features
-        self.n_components = n_components
-        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.n_components)
+        self.feature_n_components = feature_n_components
+        self.feature_extraction = GasPipelineFeatureExtraction(self.feature_reduction, self.scale_features, self.feature_n_components)
         self.svc = SVC(**kwargs)
 
     def fit(self, X, y):
@@ -72,6 +79,7 @@ class GasPipelineSvc(BaseEstimator, ClassifierMixin):
         return self.svc.predict(X)
 
     def score(self, X, y, sample_weight=None):
+        X = self.feature_extraction.transform(X)
         return self.svc.score(X, y, sample_weight)
 
     def set_params(self, **params):
