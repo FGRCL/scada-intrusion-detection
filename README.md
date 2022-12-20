@@ -10,6 +10,12 @@ start the script `src/train.py` for training and `src/tune.py` for tuning.
 pass the model name as argument to train it. We currently support the following models
 ```shell
 --randomforest
+--kmeans
+--pca
+--gmm
+--svm
+--adaboost
+--knn
 ```
 
 #### other arguements
@@ -20,6 +26,9 @@ pass the model name as argument to train it. We currently support the following 
 #### example
 ```shell
 python -m src.train --randomforest -v 4
+```
+```shell
+python -m src.tune --pca --adaboost -v 4
 ```
 
 ## Setting up your environments
