@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "10792eacf590c712fad6dcc6298ccb2d0132b7f45156e4c59ec30c409c57b156"
+            "sha256": "bcc8280d3aeda57b209ceac0d7916481b2f2ee210a788a635857bbbc007af6e8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -384,11 +384,11 @@
         },
         "ipykernel": {
             "hashes": [
-                "sha256:67daadf01c461d23aaefe2f5670779866b9bde7269b7a02ae4ef5b37e1adbf8f",
-                "sha256:70953ffa209fefc7166d365d230b710d90cdc2d2ad56e535d4c775d46da07089"
+                "sha256:0ecdae0060da61c5222ad221681f3b99b5bef739e11a3b1eb5778aa47f056f1f",
+                "sha256:4140c282a6c71cdde59abe5eae2c71bf1eeb4a69316ab76e1c4c25150a49722b"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==6.19.3"
+            "version": "==6.19.4"
         },
         "ipython": {
             "hashes": [
@@ -502,11 +502,11 @@
         },
         "jupyter-server": {
             "hashes": [
-                "sha256:3bc09974a5290249de6924a614933e6f4f3d6d11f3061423a9f4e0271064a8b3",
-                "sha256:6e71268380ad7e4f2d9dda2f3e51a4fd4d1997b5390d5acdb74c7a195cfe4c00"
+                "sha256:4ec667d3546ade3c72825a6b987baef682da2826e775b14d23e69a94dd0cbd1b",
+                "sha256:9de034fd229ab2c78815615deab45cb80897f35e10feabfb45b10628909affa8"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==2.0.1"
+            "version": "==2.0.2"
         },
         "jupyter-server-terminals": {
             "hashes": [
@@ -1293,6 +1293,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==1.9.3"
+        },
+        "seaborn": {
+            "hashes": [
+                "sha256:a9eb39cba095fcb1e4c89a7fab1c57137d70a715a7f2eefcd41c9913c4d4ed65",
+                "sha256:bb1eb1d51d3097368c187c3ef089c0288ec1fe8aa1c69fb324c68aa1d02df4c1"
+            ],
+            "index": "pypi",
+            "version": "==0.12.1"
         },
         "send2trash": {
             "hashes": [
