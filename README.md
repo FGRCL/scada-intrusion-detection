@@ -1,4 +1,4 @@
-# [botnet-attack-detection](https://github.com/FGRCL/scada-intrusion-detection)
+# [Scada Intrusion Detection](https://github.com/FGRCL/scada-intrusion-detection)
 botnet attack detection using anomaly detection and classification
 
 ## Results
