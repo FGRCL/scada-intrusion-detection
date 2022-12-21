@@ -17,20 +17,19 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class KMeansTrainer(GaspipelineModelTrainer):
     best_parameters = {
-        'anomaly_percentile': 1e-6,
-        'n_clusters': 5,
+        'anomaly_percentile': 100,
+        'n_clusters': 1,
         'balance_dataset': False,
         'feature_reduction': False,
         'scale_features': False,
     }
 
     tuning_parameters = {
-        'anomaly_percentile': logspace(-10, 2, 13),
-        'n_clusters': [5],
+        'anomaly_percentile': linspace(90, 100, 10, dtype=int),
+        'n_clusters': [1],
         'balance_dataset': [False],
-        'feature_reduction': [True, False],
-        'scale_features': [True, False],
-        'feature_n_components': linspace(1, 12, 5, dtype=int),
+        'feature_reduction': [False],
+        'scale_features': [False],
     }
 
     def __init__(self):
@@ -41,7 +40,7 @@ class KMeansTrainer(GaspipelineModelTrainer):
         self.model.fit(self.x_train)
 
     def tune(self):
-        tuned_model = GridSearchCV(self.model, self.tuning_parameters, verbose=config.verbosity, n_jobs=cpu_count()*2)
+        tuned_model = GridSearchCV(self.model, self.tuning_parameters, cv=10, verbose=config.verbosity, n_jobs=cpu_count()*2)
         tuned_model.fit(self.x_train, self.y_train)
 
         return tuned_model.cv_results_
@@ -67,15 +66,16 @@ class KMeansAnomalyDetection(BaseEstimator, ClassifierMixin):
         X = self.feature_extraction.fit_transform(X, y)
         self.kmeans.fit(X)
         distances = self.kmeans.transform(X)
-        scores = distances.min(axis=1)
+        scores = -distances.min(axis=1)
         self._threshold = percentile(scores, self.anomaly_percentile)
+
 
     def predict(self, X):
         X = self.feature_extraction.transform(X)
         distances = self.kmeans.transform(X)
-        scores = distances.min(axis=1)
+        scores = -distances.min(axis=1)
         y_pred = zeros(scores.size)
-        y_pred[scores > self._threshold] = 1
+        y_pred[scores < self._threshold] = 1
 
         return y_pred
 

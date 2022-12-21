@@ -16,8 +16,8 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class PcaTrainer(GaspipelineModelTrainer):
     best_parameters = {
-        'anomaly_percentile': 1e-9,
-        'n_components': 19,
+        'anomaly_percentile': 49,
+        'n_components': 1,
         'whiten': False,
         'balance_dataset': False,
         'feature_reduction': False,
@@ -25,13 +25,12 @@ class PcaTrainer(GaspipelineModelTrainer):
     }
 
     tuning_parameters = {
-        'anomaly_percentile': logspace(-10, 2, 13),
-        'n_components': [19],
+        'anomaly_percentile': linspace(40, 55, 15, dtype=int),
+        'n_components': [1],
         'whiten': [False],
         'balance_dataset': [False],
-        'feature_reduction': [True, False],
-        'scale_features': [True, False],
-        'feature_n_components': linspace(1, 12, 5, dtype=int),
+        'feature_reduction': [False],
+        'scale_features': [True],
     }
 
     def __init__(self):
@@ -68,16 +67,16 @@ class PcaAnomalyDetection(BaseEstimator, ClassifierMixin):
         X = self.feature_extraction.fit_transform(X, y)
         x_pca = self.pca.fit_transform(X)
         x_reconstructed = self.pca.inverse_transform(x_pca)
-        mse = square(x_reconstructed - X).mean(axis=-1)
+        mse = -square(x_reconstructed - X).mean(axis=-1)
         self._threshold = percentile(mse, self.anomaly_percentile)
 
     def predict(self, X):
         X = self.feature_extraction.transform(X)
         x_pca = self.pca.transform(X)
         x_reconstructed = self.pca.inverse_transform(x_pca)
-        mse = square(x_reconstructed - X).mean(axis=-1)
+        mse = -square(x_reconstructed - X).mean(axis=-1)
         y_pred = zeros(mse.size)
-        y_pred[mse > self._threshold] =1
+        y_pred[mse < self._threshold] = 1
 
         return y_pred
 

@@ -16,20 +16,19 @@ from src.preprocess.featureselection import get_first_cca_feature, get_first_ica
 
 class GmmTrainer(GaspipelineModelTrainer):
     best_parameters = {
-        'anomaly_percentile': 1e-4,
-        'n_components': 1,
+        'anomaly_percentile': 53,
+        'n_components': 13,
         'balance_dataset': False,
         'feature_reduction': False,
         'scale_features': False,
     }
 
     tuning_parameters = {
-        'anomaly_percentile': logspace(-10, 2, 13),
-        'n_components': [1],
+        'anomaly_percentile': linspace(48, 62, 14, dtype=int),
+        'n_components': linspace(10, 15, 5, dtype=int),
         'balance_dataset': [False],
-        'feature_reduction': [True, False],
-        'scale_features': [True, False],
-        'feature_n_components': linspace(1, 12, 5, dtype=int),
+        'feature_reduction': [False],
+        'scale_features': [False],
     }
 
     def __init__(self):
@@ -72,7 +71,7 @@ class GmmClassifier(BaseEstimator, ClassifierMixin):
         X = self.feature_extraction.transform(X)
         scores = self.gmm.score_samples(X)
         y_pred = zeros(scores.size)
-        y_pred[scores > self._threshold] = 1
+        y_pred[scores < self._threshold] = 1
 
         return y_pred
 

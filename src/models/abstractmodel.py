@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import accuracy_score, confusion_matrix, fbeta_score
+from sklearn.metrics import accuracy_score, confusion_matrix, fbeta_score, precision_score, recall_score
 
 from src.config import f_score_beta
 from src.data.gaspipeline import load_gaspipeline_dataset
@@ -47,5 +47,7 @@ class GaspipelineModelTrainer(ABC):
         confusion = confusion_matrix(self.y_test, y_pred)
         f_score = fbeta_score(self.y_test, y_pred, beta=f_score_beta)
         accuracy = accuracy_score(self.y_test, y_pred)
+        precision = precision_score(self.y_test, y_pred)
+        recall = recall_score(self.y_test, y_pred)
 
-        return confusion, f_score, accuracy
+        return confusion, f_score, accuracy, precision, recall
