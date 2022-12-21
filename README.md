@@ -1,6 +1,9 @@
 # botnet-attack-detection
 botnet attack detection using anomaly detection and classification
 
+## Results
+Preprocessed results are available in the jupyter notebook `results.ipynb`
+
 ## Using the scripts
 
 ### training a models
